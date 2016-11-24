@@ -42,6 +42,7 @@ int sprawdzanie(int sudoku[sud][sud], int wartosc, int x, int y) {
 
 
 	//wprowadzanie i sprawdzanie miejsca zmiany
+	//witam
 	int Ywar, Xwar;
 
 
