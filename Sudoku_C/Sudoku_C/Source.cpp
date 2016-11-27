@@ -95,7 +95,7 @@ int main(){
 		for (int j = 0; j < 10; j++)
 			sudoku[i][j] = 0;
 
-
+	//co tam u was s³ychaæ, mam nadziejê ¿e dobrze
 
 
 	sudoku[0][1] = 5;
