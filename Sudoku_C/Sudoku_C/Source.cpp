@@ -6,9 +6,9 @@
 int sudoku[sud][sud];
 int sudokubl[sud][sud];
 int value;
-int x, y;
+int x, y, checkfile;
 
-void tablica(int sudoku[sud][sud]) {
+void table(int sudoku[sud][sud]) {
 
 	//Draw 3 rows
 	printf(" Y |     \t\tX\n   |");
@@ -51,7 +51,7 @@ void tablica(int sudoku[sud][sud]) {
 
 }
 
-int sprawdzanie(int sudoku[sud][sud], int value, int x, int y, int sudokubl[sud][sud]) {
+int check(int sudoku[sud][sud], int value, int x, int y, int sudokubl[sud][sud]) {
 
 	int condition = 0;//if condition = 1, value can't be signed
 
@@ -72,28 +72,30 @@ int sprawdzanie(int sudoku[sud][sud], int value, int x, int y, int sudokubl[sud]
 	//Check if values may be signed without corrupion of sudoku rules in horizontal and vertical axis
 	for (int i = 0; i < 9; i++) {
 		if ((value == sudoku[y - 1][i]) || (value == sudoku[i][x - 1])) {
-			condition = 1;
+			condition++;
 			break;
 		}
 	}
 
 	//Checks 3x3 squares
-	for (int k = Ywar; k < (Ywar + 3); k++)		//3-6	6 - 9
+	for (int k = Ywar; k < (Ywar + 3); k++)
 		for (int j = Xwar; j < (Xwar + 3); j++)
 			if (sudoku[k][j] == value)
-				condition = 1;
+				condition++;
 
-	if (condition == 0) {
-		sudoku[y - 1][x - 1] = value;
-		printf("\nGood ! Go ahead\n\n");
-	}
-	else {
-		printf("NOPE ! You can't sign here, because it breaks sudoku rules! \n");
+	if (checkfile == 0) {
+		if (condition == 0) {
+			sudoku[y - 1][x - 1] = value;
+			printf("\nGood ! Go ahead\n\n");
+		}
+		else {
+			printf("NOPE ! You can't sign here, because it breaks sudoku rules! \n");
+		}
 	}
 	return condition;
 }
 
-int finalcheck(int sudoku[sud][sud], int sudokubl[sud][sud]) {
+int finalcheck(int sudoku[sud][sud]) {
 
 	int condition = 0;
 
@@ -143,7 +145,16 @@ int main() {
 
 	do {
 		read(sudoku, sudokubl);//Reads a file
-		tablica(sudoku);//Draw table
+		checkfile = 1;
+		for (int y = 1; y < 10; y++)
+			for (int x = 1; x < 10; x++)
+				if (sudoku[y - 1][x - 1] != 0)
+					if (check(sudoku, sudoku[y - 1][x - 1], x, y, sudokubl) >= 3) {
+						printf("Incorrect file");
+						exit(1);
+					}
+		checkfile = 0;
+		table(sudoku);//Draw table
 		do {
 			do {
 				printf("\n Which box do you want to change ?\n");
@@ -153,7 +164,7 @@ int main() {
 
 			printf("\n Enter value <1-9> : ");
 			scanf("%d", &value);
-		} while ((value < 1) && (value > 9) || ((sprawdzanie(sudoku, value, x, y, sudokubl)) == 1));	//till value is proper
+		} while ((value < 1) && (value > 9) || ((check(sudoku, value, x, y, sudokubl)) == 1));	//till value is proper
 		save(sudoku);
 		system("CLS");
 	} while (finalcheck != 0);//till all values are different than 0
